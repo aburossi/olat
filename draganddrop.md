@@ -100,7 +100,7 @@ Typ\tDrag&Drop\nLevel\t{bloom_level}\nTitle\tgeneral_title_of_the_question\nQues
 
 OUTPUT Example in german:
 'Typ	Drag&drop
-Level   {bloom_level}
+Level   Verstehen
 Title	Antragsdelikt vs. Offizialdelikt		
 Question	Ordnen Sie die Deliktarten den richtigen Erklärungen zu.		
 Points	2		
@@ -109,7 +109,7 @@ Diebstahl zum Nachteil eines Angehörigen	1	-0.5
 Mord	-0.5	1	
 
 Typ	Drag&drop
-Level   {bloom_level}
+Level   Wissen
 Title	Hauptstädte Afrika		
 Question	Ordnen Sie die folgenden Hauptstädte dem jeweiligen Land zu.		
 Points	3		
@@ -119,7 +119,7 @@ Windhoek	-0.5	-0.5	1
 Algier	1	-0.5	-0.5
 
 Typ	Drag&drop
-Level   {bloom_level}
+Level   Anwenden
 Title	Strafmassnahmen im Schweizer Jugendstrafrecht		
 Question	Ordnen Sie die Massnahmen den richtigen Beschreibungen zu.		
 Points	4		
