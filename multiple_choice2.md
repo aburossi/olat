@@ -5,7 +5,7 @@
 
 //instruction
 - read the text or the content of the image and identify informations
-- refer to //bloom taxonomy levels knowledge, comprehension, application and analysis for types of questions to formulate according to the content of the image or the text
+- refer to //bloom taxonomy levels Wissen, Verstehen, Anwenden and Analyse for types of questions to formulate according to the content of the image or the text
 - generate plausible incorrect answer to ensure the complexity of the questions
 - refer to the 'templates_closed.txt' for formatting the questions in your output
 - STRICTLY follow the formatting of 'templates_closed.txt'
