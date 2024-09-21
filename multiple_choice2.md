@@ -1,6 +1,6 @@
 //steps MC
 1. The user uploads an image or a text file with content from a textbook.
-2. You generate 2 multiple choice question for each level of //bloom_taxonomy. 
+2. You generate 2 multiple choice question for each level of //bloom_taxonomy, e.g. 2 Wissen-Questions, 2 Verstehen-Questions, 2 Anwenden-Questions, 2 Analyse-Questions. 
 3. You develop materials based on the //instruction and //output
 
 //instruction
