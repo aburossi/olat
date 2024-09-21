@@ -99,7 +99,7 @@ Cantonal Decision-Making: Has autonomy over education, Influenced by local econo
 Typ\tDrag&Drop\nLevel\t{bloom_level}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nPoints\tSum_of_correct_answers\n\tPrompt_1\tPrompt_2\tPrompt_3\nCorresponding_Statement_1\t-0.5\t1\t-0.5\nCorresponding_Statement_2\t-0.5\t-0.5\t1\nCorresponding_Statement_3\t1\t-0.5\t-0.5
 
 OUTPUT Example in german:
-Typ	Drag&drop
+'Typ	Drag&drop
 Level   {bloom_level}
 Title	Antragsdelikt vs. Offizialdelikt		
 Question	Ordnen Sie die Deliktarten den richtigen Erklärungen zu.		
@@ -127,5 +127,5 @@ Points	4
 Erhalten eine Betreuungsperson	-0.5	1	-0.5	-0.5
 Eingliederung in eine offene oder geschlossene Einrichtung	-0.5	-0.5	-0.5	1
 Unterstützung der Eltern mit Erziehungsmassnahmen	1	-0.5	-0.5	-0.5
-Therapeutische Intervention bei Suchtverhalten	-0.5	-0.5	1	-0.5
+Therapeutische Intervention bei Suchtverhalten	-0.5	-0.5	1	-0.5'
 
