@@ -218,7 +218,7 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=messages,
-            max_tokens=4000,
+            max_tokens=8000,
             temperature=0.6
         )
         
