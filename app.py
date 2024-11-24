@@ -323,7 +323,7 @@ def process_pdf(file):
 
 def main():
     """Main function for the Streamlit app."""
-    st.title("OLAT Fragen Generator")
+    st.title("❗❗ Zur Zeit funktioniert die Verbindung zwischen BBW und OPENAI nicht❗❗ 👉 [Alternative mit eigenem API-Schlüssel](https://olat-import.streamlit.app/)")
 
     # Step 1: Language selection using radio buttons
     st.subheader("Select the Language for Generated Questions:")
