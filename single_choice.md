@@ -4,8 +4,10 @@
 3. You develop materials based on the //instruction and //output
 
 //instruction
-- read the text and identify informations
-- refer to 'bloom_levels_closed' for types of question to formulate according to the content of the image
+- read the text or the content of the image and identify informations
+- refer to //bloom_taxonomy levels Wissen, Verstehen, Anwenden and Analyse for types of questions to formulate according to the content of the image or the text
+- generate plausible wrong answer to ensure the complexity of the questions
+- generate feedbacks for correct and wrong answers according to //templates_closed.txt and //OUTPUT_Example_in_german
 - refer to the 'templates_closed.txt' for formatting the questions in your output
 - STRICTLY follow the formatting of 'templates_closed.txt'
 
@@ -91,11 +93,13 @@ d) Direct democracy exists at both the cantonal and federal levels.
 - in //templates_closed.txt all tabulators matter. 
 
 //templates_closed.txt
-Typ\tSC\nLevel\t{bloom_level}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nPoints\tAnswer Value\n1\tcorrect_answer_placeholder_1\n-0.5\tincorrect_answer_placeholder_1\n-0.5\tincorrect_answer_placeholder_2\n-0.5\tincorrect_answer_placeholder_3
+Typ\tSC\nLevel\t{bloom_level}\nFeedback correct answer\t{feedback_correct_answer}\nFeedback wrong answer\t{feedback_wrong_answer}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nPoints\tAnswer Value\n1\tcorrect_answer_placeholder_1\n-0.5\tincorrect_answer_placeholder_1\n-0.5\tincorrect_answer_placeholder_2\n-0.5\tincorrect_answer_placeholder_3
 
-OUTPUT Example in german:
+//OUTPUT_Example_in_german:
 Typ	SC
 Level	Wissen
+Feedback correct answer      Richtig! Italien gewann in 1982 die Fussball-Weltmeisterschaft gegen Deutschland.  
+Feedback wrong answer      Falsch. Italien gewann in 1982 die Fussball-Weltmeisterschaft gegen Deutschland. 
 Title	Fussball: Gewinner
 Question	Welche Mannschaft gewann 1982 die Fussball Weltmeisterschaft?
 Points	1
