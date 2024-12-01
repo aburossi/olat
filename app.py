@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+from openai
 import json
 import random
 import PyPDF2
@@ -15,7 +15,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Initialize OpenAI client
-client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+openai.api_key = st.secrets["openai"]["api_key"]
 
 # List of available message types
 MESSAGE_TYPES = [
