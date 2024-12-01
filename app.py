@@ -359,60 +359,60 @@ def main():
     
     # Right Column: Dropdowns
     with col2:
-    # Other expandable sections below
-    with st.expander("ℹ️ Kosteninformationen"):
-        st.markdown('''
-        <div class="custom-info">
-            <ul>
-                <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
-                <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
+        # Other expandable sections below
+        with st.expander("ℹ️ Kosteninformationen"):
+            st.markdown('''
+            <div class="custom-info">
+                <ul>
+                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
+                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+        
+        with st.expander("✅ Fragetypen"):
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Multiple-Choice-Fragen:</strong>
+                <ul>
+                    <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
+                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten.</li>
+                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten.</li>
+                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Inline/FIB-Fragen:</strong>
+                <ul>
+                    <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
+                    <li>FiB = Das fehlende Wort eingeben.</li>
+                    <li>Inline = Das fehlende Wort auswählen.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Andere Fragetypen:</strong>
+                <ul>
+                    <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
+                    <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
+                    <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
+                    <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
     
-    with st.expander("✅ Fragetypen"):
-        st.markdown('''
-        <div class="custom-success">
-            <strong>Multiple-Choice-Fragen:</strong>
-            <ul>
-                <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
-                <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten.</li>
-                <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten.</li>
-                <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-        st.markdown('''
-        <div class="custom-success">
-            <strong>Inline/FIB-Fragen:</strong>
-            <ul>
-                <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
-                <li>FiB = Das fehlende Wort eingeben.</li>
-                <li>Inline = Das fehlende Wort auswählen.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-        st.markdown('''
-        <div class="custom-success">
-            <strong>Andere Fragetypen:</strong>
-            <ul>
-                <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
-                <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
-                <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
-                <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-
-    with st.expander("⚠️ Warnungen"):
-        st.markdown('''
-        <div class="custom-warning">
-            <ul>
-                <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
-                <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
+        with st.expander("⚠️ Warnungen"):
+            st.markdown('''
+            <div class="custom-warning">
+                <ul>
+                    <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
+                    <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
 
     # Generate questions button
     user_input = st.text_area("Geben Sie Ihren Text oder Ihre Frage ein:", value="")
