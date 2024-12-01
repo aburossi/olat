@@ -359,34 +359,6 @@ def main():
     
     # Right Column: Dropdowns
     with col2:
-        st.markdown("### Dropdowns für Fragetypen:")
-        MESSAGE_TYPES = [
-            "single_choice",
-            "multiple_choice1",
-            "multiple_choice2",
-            "multiple_choice3",
-            "kprim",
-            "truefalse",
-            "draganddrop",
-            "inline_fib"
-        ]
-        
-        # Kosteninformationen und Dropdown für Question Types
-        st.markdown("#### Fragekategorien auswählen:")
-        selected_types = st.multiselect("Fragetypen auswählen:", MESSAGE_TYPES)
-
-        # Hinweis auf die Kosten
-        st.markdown(
-            """
-            <div class="custom-info">
-                <ul>
-                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
-                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True
-        )
-
     # Other expandable sections below
     with st.expander("ℹ️ Kosteninformationen"):
         st.markdown('''
