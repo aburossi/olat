@@ -13,6 +13,9 @@ import logging
 import httpx
 import os
 
+# Set page title and icon
+st.set_page_config(page_title="OLAT Fragen Generator", page_icon="📝", layout="centered")
+
 # Set up logging for better error tracking
 logging.basicConfig(level=logging.INFO)
 
