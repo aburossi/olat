@@ -1,5 +1,5 @@
 import streamlit as st
-from openai
+import openai
 import json
 import random
 import PyPDF2
