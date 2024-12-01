@@ -414,16 +414,6 @@ def main():
             </div>
             ''', unsafe_allow_html=True)
 
-    # Generate questions button
-    user_input = st.text_area("Geben Sie Ihren Text oder Ihre Frage ein:", value="")
-    learning_goals = st.text_area("Lernziele (Optional):")
-    
-    if st.button("Fragen generieren"):
-        if selected_types and (user_input or selected_language):
-            st.success("Fragen wurden erfolgreich generiert!")  # Dummy logic
-        else:
-            st.warning("Bitte Text eingeben und mindestens einen Fragetyp auswählen.")
-
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
 
@@ -490,63 +480,6 @@ def main():
             """, unsafe_allow_html=True
         )
         
-        # Kosteninformationen mit Dropdown-Titel
-        with st.expander("ℹ️ Kosteninformationen"):
-            st.markdown('''
-            <div class="custom-info">
-                <ul>
-                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
-                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-        
-        # Fragetypen mit Dropdown-Titel
-        with st.expander("✅ Fragetypen"):
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Multiple-Choice-Fragen:</strong>
-                <ul>
-                    <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
-                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten.</li>
-                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten.</li>
-                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Inline/FIB-Fragen:</strong>
-                <ul>
-                    <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
-                    <li>FiB = Das fehlende Wort eingeben.</li>
-                    <li>Inline = Das fehlende Wort auswählen.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Andere Fragetypen:</strong>
-                <ul>
-                    <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
-                    <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
-                    <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
-                    <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-        
-        # Warnungen mit Dropdown-Titel
-        with st.expander("⚠️ Warnungen"):
-            st.markdown('''
-            <div class="custom-warning">
-                <ul>
-                    <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
-                    <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-
         # Generate questions button
         if st.button("Generate Questions"):
             if (user_input or image_content) and selected_types:
