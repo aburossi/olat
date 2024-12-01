@@ -43,18 +43,6 @@ MESSAGE_TYPES = [
     "inline_fib"
 ]
 
-# Password Authentication
-def authenticate_user():
-    """Authenticate the user using a password."""
-    st.sidebar.title("Login")
-    password = st.sidebar.text_input("Enter the password:", type="password")
-    if password == st.secrets["app_password"]:
-        return True
-    else:
-        if password:
-            st.sidebar.error("Incorrect password. Please try again.")
-        return False
-
 @st.cache_data
 def read_prompt_from_md(filename):
     """Read the prompt from a markdown file and cache the result."""
