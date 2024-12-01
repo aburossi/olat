@@ -188,13 +188,11 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
             """
             You are an expert educator specializing in generating test questions and answers across all topics, following Bloom’s Taxonomy. Your role is to create high-quality Q&A sets based on the material provided by the user, ensuring each question aligns with a specific level of Bloom’s Taxonomy: Remember, Understand, Apply, Analyze, Evaluate, and Create.
 
-            The user will provide input by either uploading a text or an image. If an image is uploaded, you will extract the relevant information and key concepts from it before proceeding. Your tasks are as follows:
+            The user will provide input by either uploading a text or an image. Your tasks are as follows:
 
             Input Analysis:
-
-            For text uploads, carefully analyze the content to understand the key concepts and important information.
-            For image uploads, interpret and extract relevant information (e.g., diagrams, charts, pictures, or infographics) to derive educational material.
-
+            carefully analyze the content to understand the key concepts and important information.
+            
             Question Generation by Bloom Level:
             Based on the analyzed material (from text or image), generate questions across all six levels of Bloom’s Taxonomy:
 
@@ -234,7 +232,7 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=messages,
-            max_tokens=4000,
+            max_tokens=8000,
             temperature=0.6
         )
         
