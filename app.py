@@ -474,6 +474,16 @@ def main():
             </div>
             ''', unsafe_allow_html=True)
 
+        # Generate questions button
+        if st.button("Generate Questions"):
+            if (user_input or image_content) and selected_types:
+                # Ensure that the selected_language is passed to the function
+                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language)              
+            elif not user_input and not image_content:
+                st.warning("Please enter some text, upload a file, or upload an image.")
+            elif not selected_types:
+                st.warning("Please select at least one question type.")
+
 
 @st.cache_data
 def is_pdf_ocr(text):
