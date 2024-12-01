@@ -379,10 +379,11 @@ def main():
                 <strong>Multiple-Choice-Fragen:</strong>
                 <ul>
                     <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
-                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten.</li>
-                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten.</li>
-                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten.</li>
+                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten = 3 Punkte</li>
+                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten = 3 Punkte</li>
+                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten = 3 Punkte</li>
                 </ul>
+                <p>Man kann die Punktzahl der Fragen im Editor später mit Ctrl+H suchen und ersetzen. Achtung: Punktzahl für korrekte Antworten UND maximale Punktzahl anpassen!</p>
             </div>
             ''', unsafe_allow_html=True)
             st.markdown('''
