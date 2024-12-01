@@ -43,18 +43,6 @@ MESSAGE_TYPES = [
     "inline_fib"
 ]
 
-# Password Authentication
-def authenticate_user():
-    """Authenticate the user using a password."""
-    st.sidebar.title("Login")
-    password = st.sidebar.text_input("Enter the password:", type="password")
-    if password == st.secrets["app_password"]:
-        return True
-    else:
-        if password:
-            st.sidebar.error("Incorrect password. Please try again.")
-        return False
-
 @st.cache_data
 def read_prompt_from_md(filename):
     """Read the prompt from a markdown file and cache the result."""
@@ -429,74 +417,62 @@ def main():
             """, unsafe_allow_html=True
         )
         
-        # Cost Information with custom info callout style
-        st.markdown('''
-        <div class="custom-info">
-            <strong>ℹ️ Cost Information:</strong>
-            <ul>
-                <li>The cost of usage depends on the <strong>length of the input</strong> (ranging from $0.01 to $0.1).</li>
-                <li>Each selected question type will cost approximately $0.01.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
+        # Kosteninformationen mit Dropdown-Titel
+        with st.expander("ℹ️ Kosteninformationen"):
+            st.markdown('''
+            <div class="custom-info">
+                <ul>
+                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
+                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
         
-        # Question types with success style
-        st.markdown('''
-        <div class="custom-success">
-            <strong>✅ Multiple Choice Questions:</strong>
-            <ul>
-                <li>All multiple-choice questions have a <strong>maximum of 3 points</strong>.</li>
-                <li><strong>multiple_choice1</strong>: 1 out of 4 correct answers.</li>
-                <li><strong>multiple_choice2</strong>: 2 out of 4 correct answers.</li>
-                <li><strong>multiple_choice3</strong>: 3 out of 4 correct answers.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
+        # Fragetypen mit Dropdown-Titel
+        with st.expander("✅ Fragetypen"):
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Multiple-Choice-Fragen:</strong>
+                <ul>
+                    <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
+                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten.</li>
+                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten.</li>
+                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Inline/FIB-Fragen:</strong>
+                <ul>
+                    <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
+                    <li>FiB = Das fehlende Wort eingeben.</li>
+                    <li>Inline = Das fehlende Wort auswählen.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Andere Fragetypen:</strong>
+                <ul>
+                    <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
+                    <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
+                    <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
+                    <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
         
-        st.markdown('''
-        <div class="custom-success">
-            <strong>✅ Inline/FIB Questions:</strong>
-            <ul>
-                <li>The <strong>Inline</strong> and <strong>FiB</strong> questions are identical in content.</li>
-                <li>FiB = type the missing word.</li>
-                <li>Inline = choose the missing word.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-        
-        st.markdown('''
-        <div class="custom-success">
-            <strong>✅ Other Question Types:</strong>
-            <ul>
-                <li><strong>Single Choice</strong>: 4 Answers, 1 Point per Question.</li>
-                <li><strong>KPRIM</strong>: 4 Answers, 5 Points (4/4 correct), 2.5 Points (3/4 correct), 0 Points (50% or less correct).</li>
-                <li><strong>True/False</strong>: 3 Answers, 3 Points per Question.</li>
-                <li><strong>Drag & Drop</strong>: Variable Points.</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-        
-        # Warnings with custom warning style
-        st.markdown('''
-        <div class="custom-warning">
-            <strong>⚠️ Warnings:</strong>
-            <ul>
-                <li><strong>Always double-check that Total Points = Sum of correct answers' Points.</strong></li>
-                <li><strong>Always double-check the content of the answers.</strong></li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-
-    
-        # Generate questions button
-        if st.button("Generate Questions"):
-            if (user_input or image_content) and selected_types:
-                # Ensure that the selected_language is passed to the function
-                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language)              
-            elif not user_input and not image_content:
-                st.warning("Please enter some text, upload a file, or upload an image.")
-            elif not selected_types:
-                st.warning("Please select at least one question type.")
+        # Warnungen mit Dropdown-Titel
+        with st.expander("⚠️ Warnungen"):
+            st.markdown('''
+            <div class="custom-warning">
+                <ul>
+                    <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
+                    <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
 
 
 @st.cache_data
