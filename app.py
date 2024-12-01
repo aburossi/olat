@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import json
 import random
 import PyPDF2
@@ -15,7 +15,9 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Initialize OpenAI client
-openai.api_key = st.secrets["openai"]["api_key"]
+client = OpenAI(
+    api_key=st.secrets["openai"]["api_key"]  # API-Schlüssel aus den Streamlit-Secrets
+)
 
 # List of available message types
 MESSAGE_TYPES = [
@@ -222,8 +224,10 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
             temperature=0.6
         )
         
+        # Return the content of the first choice
         return response.choices[0].message.content
     except Exception as e:
+        # Log and show error
         st.error(f"Error communicating with OpenAI API: {e}")
         logging.error(f"Error communicating with OpenAI API: {e}")
         return None
