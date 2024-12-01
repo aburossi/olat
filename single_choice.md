@@ -90,6 +90,7 @@ d) Direct democracy exists at both the cantonal and federal levels.
 
 //rules
 - rules SC ALWAYS 1 correct answer and 3 wrong.
+- ALWAYS generate the feedback_correct_answer and feedback_wrong_answer
 - in //templates_closed.txt all tabulators matter. 
 
 //templates_closed.txt
