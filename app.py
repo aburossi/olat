@@ -10,13 +10,25 @@ from pdf2image import convert_from_bytes
 import io
 from PIL import Image
 import logging
+import httpx
+import os
 
 # Set up logging for better error tracking
 logging.basicConfig(level=logging.INFO)
 
-# Initialize OpenAI client
+# Clear any existing proxy environment variables to prevent OpenAI SDK from using them
+os.environ.pop('HTTP_PROXY', None)
+os.environ.pop('HTTPS_PROXY', None)
+os.environ.pop('http_proxy', None)
+os.environ.pop('https_proxy', None)
+
+# Initialize a custom httpx client without proxies
+http_client = httpx.Client()
+
+# Initialize OpenAI client with the custom httpx client
 client = OpenAI(
-    api_key=st.secrets["openai"]["api_key"]  # API-Schlüssel aus den Streamlit-Secrets
+    api_key=st.secrets["openai"]["api_key"],  # API key from Streamlit Secrets
+    http_client=http_client
 )
 
 # List of available message types
@@ -142,7 +154,6 @@ def transform_output(json_string):
 
         return f"{ic_output}\n---\n{fib_output}"
     except json.JSONDecodeError as e:
-
         st.error(f"Error parsing JSON: {e}")
         st.text("Cleaned input:")
         st.code(cleaned_json_string, language='json')
@@ -156,8 +167,8 @@ def transform_output(json_string):
             st.warning("Attempted to salvage partial JSON. Results may be incomplete.")
             fib_output, ic_output = convert_json_to_text_format(partial_json)
             return f"{ic_output}\n---\n{fib_output}"
-        except:
-            st.error("Unable to salvage partial JSON.")
+        except Exception as e_partial:
+            st.error(f"Unable to salvage partial JSON: {e_partial}")
             return "Error: Invalid JSON format"
     except Exception as e:
         st.error(f"Error processing input: {str(e)}")
@@ -198,7 +209,7 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
             messages = [
                 {"role": "system", "content": system_prompt},
                 {
-                    "role": "user",
+                    "role": "user", 
                     "content": [
                         {"type": "text", "text": prompt},
                         {
@@ -290,7 +301,6 @@ def generate_questions_with_image(user_input, learning_goals, selected_types, im
             mime="text/plain"
         )
 
-
 @st.cache_data
 def convert_pdf_to_images(file):
     """Convert PDF pages to images."""
@@ -351,7 +361,7 @@ def main():
     # Reset cache when a new file is uploaded
     if uploaded_file:
         st.cache_data.clear()  # This clears the cache to avoid previous cached values
-    
+
     if uploaded_file is not None:
         if uploaded_file.type == "application/pdf":
             text_content = extract_text_from_pdf(uploaded_file)
@@ -467,7 +477,7 @@ def main():
     
         # Generate questions button
         if st.button("Generate Questions"):
-            if user_input or image_content and selected_types:
+            if (user_input or image_content) and selected_types:
                 # Ensure that the selected_language is passed to the function
                 generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language)              
             elif not user_input and not image_content:
@@ -475,6 +485,13 @@ def main():
             elif not selected_types:
                 st.warning("Please select at least one question type.")
 
+
+@st.cache_data
+def is_pdf_ocr(text):
+    """Placeholder function to determine if PDF is OCRed."""
+    # Implement actual OCR detection logic if necessary
+    # For now, return True to assume PDFs are OCRed
+    return True
 
 if __name__ == "__main__":
     main()
