@@ -97,7 +97,7 @@ d) Direct democracy exists at both the cantonal and federal levels.
 //templates_closed.txt
 Typ\tMC\nLevel\t{bloom_level}\nFeedback correct answer\t{feedback_correct_answer}\nFeedback wrong answer\t{feedback_wrong_answer}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nMax answers\t4\nMin answers\t0\nPoints\t3\n1.5\tcorrect_answer_placeholder_1\n1.5\tcorrect_answer_placeholder_2\n-0.5\tincorrect_answer_placeholder_1\n-0.5\tincorrect_answer_placeholder_2
 
-OUTPUT Example in german:
+//OUTPUT_Example_in_german
 Typ	MC
 Level	Wissen
 Feedback correct answer      Richtig! Deutschland und Brasilien haben schon eine Fussball-Weltmeisterschaft gewonnen.  
