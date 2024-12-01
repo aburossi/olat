@@ -31,6 +31,18 @@ client = OpenAI(
     http_client=http_client
 )
 
+# Password Authentication
+def authenticate_user():
+    """Authenticate the user using a password."""
+    st.sidebar.title("Login")
+    password = st.sidebar.text_input("Enter the password:", type="password")
+    if password == st.secrets["app_password"]:
+        return True
+    else:
+        if password:
+            st.sidebar.error("Incorrect password. Please try again.")
+        return False
+
 # List of available message types
 MESSAGE_TYPES = [
     "single_choice",
