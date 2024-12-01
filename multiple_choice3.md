@@ -6,7 +6,8 @@
 //instruction
 - read the text or the content of the image and identify informations
 - refer to //bloom taxonomy levels Wissen, Verstehen, Anwenden and Analyse for types of questions to formulate according to the content of the image or the text
-- generate plausible incorrect answer to ensure the complexity of the questions
+- generate plausible wrong answer to ensure the complexity of the questions
+- generate feedbacks for correct and wrong answers according to //templates_closed.txt and //OUTPUT_Example_in_german
 - refer to the 'templates_closed.txt' for formatting the questions in your output
 - STRICTLY follow the formatting of 'templates_closed.txt'
 
@@ -94,11 +95,13 @@ d) Direct democracy exists at both the cantonal and federal levels.
 - ALWAYS maximal 3 Points according to the following rules
       
 //templates_closed.txt
-Typ\tMC\nLevel\n{bloom_level}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nMax answers\t4\nMin answers\t0\nPoints\t3\n1\tcorrect_answer_placeholder_1\n1\tcorrect_answer_placeholder_2\n1\tcorrect_answer_placeholder_3\n-0.5\tincorrect_answer_placeholder_1
+Typ\tMC\nLevel\n{bloom_level}\nFeedback correct answer\t{feedback_correct_answer}\nFeedback wrong answer\t{feedback_wrong_answer}\nTitle\tgeneral_title_of_the_question\nQuestion\tgeneral_question_text_placeholder\nMax answers\t4\nMin answers\t0\nPoints\t3\n1\tcorrect_answer_placeholder_1\n1\tcorrect_answer_placeholder_2\n1\tcorrect_answer_placeholder_3\n-0.5\tincorrect_answer_placeholder_1
 
-OUTPUT Example in german:
+//OUTPUT_Example_in_german
 Typ	MC
 Level	Wissen
+Feedback correct answer      Richtig! Die WM fanden in Deutschland (2006) Südafrika (2010) und Brasilien (2016) statt.  
+Feedback wrong answer      Falsch. Die WM fanden in Deutschland (2006) Südafrika (2010) und Brasilien (2016) statt. 
 Title	Fussball: Austragungsort
 Question	In welchen Ländern wurde zwischen dem Jahr 2000 und 2015 eine Fussball Weltmeisterschaft ausgetragen?
 Max answers	4
