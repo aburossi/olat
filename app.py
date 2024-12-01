@@ -414,6 +414,22 @@ def main():
             </div>
             ''', unsafe_allow_html=True)
 
+        # Kontaktinformationen Expander
+        with st.expander("📧 Kontaktinformationen"):
+            st.markdown('''
+            <div class="custom-info">
+                <p>Wenn du Fragen oder Verbesserungsideen hast, kannst du mich gerne kontaktieren:</p>
+                <ul>
+                    <li><strong>Pietro Rossi</strong></li>
+                    <li><strong>E-Mail:</strong> pietro.rossi[at]bbw.ch</li>
+                </ul>
+                <p>Ich freue mich über dein Feedback!</p>
+            </div>
+            ''', unsafe_allow_html=True)
+
+
+
+    
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
 
