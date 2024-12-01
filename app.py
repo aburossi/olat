@@ -351,9 +351,6 @@ def main():
     """Main function for the Streamlit app."""
     st.title("OLAT Fragen Generator")
 
-    # Authenticate user before proceeding
-    if not authenticate_user():
-        st.stop()  # Stop the app if authentication fails
 
     # Step 1: Language selection using radio buttons
     st.subheader("Select the Language for Generated Questions:")
