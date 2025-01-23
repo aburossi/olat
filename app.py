@@ -451,15 +451,22 @@ def main():
             index=0
         )
 
+        # Add this after the language selection
+        st.markdown("### Modell auswählen:")
+        selected_model = st.radio(
+            "Wählen Sie das OpenAI-Modell:",
+            ["gpt-4o", "gpt-4o-mini"],
+            index=0
+        )
+
     with col2:
         # Video iframe filling the entire right column
         st.markdown("### Videoanleitung")
         components.html(
             """
-            <!-- Insert your YouTube iframe here -->
             <iframe src="https://bbwch-my.sharepoint.com/personal/pietro_rossi_bbw_ch/_layouts/15/embed.aspx?UniqueId=2536d633-4608-4236-a19f-70595426359f&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="640" height="360" frameborder="0" scrolling="no" allowfullscreen title="OLAT Fragengenerator.mp4"></iframe>
             """,
-            height=360  # Adjust height as needed
+            height=370
         )
 
 
