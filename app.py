@@ -206,9 +206,12 @@ def transform_output(json_string):
         st.code(json_string)
         return "Error: Unable to process input"
 
-def get_chatgpt_response(prompt, model, image=None, selected_language="English"):
+def get_chatgpt_response(prompt, image=None, selected_language="English"):
     """Fetch response from OpenAI GPT with error handling."""
     try:
+        # Auto-select model based on input type
+        model = "gpt-4o-mini" if image else "gpt-4o"
+        
         # Create a system prompt that includes language instruction
         system_prompt = (
             """
@@ -265,7 +268,7 @@ def get_chatgpt_response(prompt, model, image=None, selected_language="English")
         logging.error(f"Error communicating with OpenAI API: {e}")
         return None
 
-def process_images(images, selected_language, selected_model):
+def process_images(images, selected_language):
     """Process uploaded images and generate questions."""
     for idx, image in enumerate(images):
         st.image(image, caption=f'Page {idx+1}', use_column_width=True)
@@ -278,11 +281,11 @@ def process_images(images, selected_language, selected_model):
         # Button to generate questions for the page
         if st.button(f"Generate Questions for Page {idx+1}", key=f"generate_button_{idx}"):
             if user_input and selected_types:
-                generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language, selected_model)
+                generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language)
             else:
                 st.warning(f"Please enter text and select question types for Page {idx+1}.")
 
-def generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language, selected_model):
+def generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language):
     """Generate questions for the image and handle errors."""
     all_responses = ""
     generated_content = {}
@@ -290,7 +293,7 @@ def generate_questions_with_image(user_input, learning_goals, selected_types, im
         prompt_template = read_prompt_from_md(msg_type)
         full_prompt = f"{prompt_template}\n\nUser Input: {user_input}\n\nLearning Goals: {learning_goals}"
         try:
-            response = get_chatgpt_response(full_prompt, model=selected_model, image=image, selected_language=selected_language)
+            response = get_chatgpt_response(full_prompt, image=image, selected_language=selected_language)
             if response:
                 if msg_type == "inline_fib":
                     processed_response = transform_output(response)
@@ -357,8 +360,6 @@ def process_pdf(file):
         return None, convert_pdf_to_images(file)
     else:
         return text_content, None
-
-import streamlit.components.v1 as components
 
 def main():
     """Main function for the Streamlit app."""
@@ -451,14 +452,6 @@ def main():
             index=0
         )
 
-        # Add this after the language selection
-        st.markdown("### Modell auswählen:")
-        selected_model = st.radio(
-            "Wählen Sie das OpenAI-Modell:",
-            ["gpt-4o", "gpt-4o-mini"],
-            index=0
-        )
-
     with col2:
         # Video iframe filling the entire right column
         st.markdown("### Videoanleitung")
@@ -468,7 +461,6 @@ def main():
             """,
             height=370
         )
-
 
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
@@ -498,7 +490,7 @@ def main():
             st.error("Unsupported file type. Please upload a PDF, DOCX, or image file.")
 
     if images:
-        process_images(images, selected_language, selected_model)
+        process_images(images, selected_language)
     else:
         user_input = st.text_area("Enter your text or question about the image:", value=text_content)
         learning_goals = st.text_area("Learning Goals (Optional):")
@@ -559,7 +551,7 @@ def main():
 
         if st.button("Generate Questions"):
             if (user_input or image_content) and selected_types:
-                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language, selected_model)              
+                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language)              
             elif not user_input and not image_content:
                 st.warning("Please enter some text, upload a file, or upload an image.")
             elif not selected_types:
