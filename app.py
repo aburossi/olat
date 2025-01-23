@@ -110,15 +110,26 @@ def replace_german_sharp_s(text):
     return text.replace('ß', 'ss')
 
 def clean_json_string(s):
-    # Remove all surrounding markdown code block indicators
-    s = re.sub(r'^\s*```(json)?\s*', '', s, flags=re.IGNORECASE)  # Remove opening ```
-    s = re.sub(r'\s*```\s*$', '', s, flags=re.IGNORECASE)         # Remove closing ```
+    # Remove all markdown code blocks and surrounding whitespace
+    s = re.sub(r'^\s*```(json)?\s*', '', s, flags=re.IGNORECASE | re.MULTILINE)
+    s = re.sub(r'\s*```\s*$', '', s, flags=re.IGNORECASE | re.MULTILINE)
+    
+    # Remove any remaining triple backticks in the content
+    s = re.sub(r'```', '', s)
+    
+    # Additional cleaning
     s = s.strip()
     s = re.sub(r'\s+', ' ', s)
     s = re.sub(r'(?<=text": ")(.+?)(?=")', lambda m: m.group(1).replace('\n', '\\n'), s)
     s = ''.join(char for char in s if ord(char) >= 32 or char == '\n')
-    match = re.search(r'\[.*\]', s, re.DOTALL)
-    return match.group(0) if match else s
+    
+    # Handle potential incomplete JSON
+    if not s.startswith('['):
+        s = '[' + s
+    if not s.endswith(']'):
+        s += ']'
+    
+    return s
 
 def convert_json_to_text_format(json_input):
     if isinstance(json_input, str):
