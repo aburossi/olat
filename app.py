@@ -501,26 +501,53 @@ def main():
         st.markdown(
             """
             <style>
+            /* Adaptive CSS for light/dark modes */
             .custom-info {
-                background-color: #e7f3fe;
+                background-color: rgba(33, 150, 243, 0.1);
                 padding: 10px;
                 border-radius: 5px;
                 border-left: 6px solid #2196F3;
+                color: inherit;
             }
+            
             .custom-success {
-                background-color: #d4edda;
+                background-color: rgba(40, 167, 69, 0.1);
                 padding: 10px;
                 border-radius: 5px;
                 border-left: 6px solid #28a745;
+                color: inherit;
             }
+            
             .custom-warning {
-                background-color: #fff3cd;
+                background-color: rgba(255, 193, 7, 0.1);
                 padding: 10px;
                 border-radius: 5px;
                 border-left: 6px solid #ffc107;
+                color: inherit;
+            }
+        
+            /* Force text color inheritance */
+            .custom-info, .custom-success, .custom-warning,
+            .custom-info p, .custom-success p, .custom-warning p,
+            .custom-info li, .custom-success li, .custom-warning li {
+                color: inherit !important;
+            }
+        
+            /* Better contrast for dark mode */
+            @media (prefers-color-scheme: dark) {
+                .custom-info {
+                    background-color: rgba(33, 150, 243, 0.2);
+                }
+                .custom-success {
+                    background-color: rgba(40, 167, 69, 0.2);
+                }
+                .custom-warning {
+                    background-color: rgba(255, 193, 7, 0.2);
+                }
             }
             </style>
-            """, unsafe_allow_html=True
+            """,
+            unsafe_allow_html=True
         )
 
         if st.button("Generate Questions"):
