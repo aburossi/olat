@@ -14,10 +14,32 @@ import httpx
 import os
 
 # Set page title and icon
-st.set_page_config(page_title="OLAT Fragen Generator", page_icon="📝", layout="centered")
+st.set_page_config(page_title="OLAT Fragen Generator", page_icon="📝", layout="wide", initial_sidebar_state="expanded")
 
 # Set up logging for better error tracking
 logging.basicConfig(level=logging.INFO)
+
+# Enforce Light Mode using CSS
+st.markdown(
+    """
+    <style>
+    /* Force light mode */
+    body, .css-18e3th9, .css-1d391kg {
+        background-color: white;
+        color: black;
+    }
+    /* Override Streamlit's default dark mode elements */
+    .css-1aumxhk, .css-1v3fvcr {
+        background-color: white;
+    }
+    /* Ensure all text is dark */
+    .css-1v0mbdj, .css-1xarl3l {
+        color: black;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Clear any existing proxy environment variables to prevent OpenAI SDK from using them
 os.environ.pop('HTTP_PROXY', None)
@@ -28,11 +50,16 @@ os.environ.pop('https_proxy', None)
 # Initialize a custom httpx client without proxies
 http_client = httpx.Client()
 
-# Initialize OpenAI client with the custom httpx client
-client = OpenAI(
-    api_key=st.secrets["openai"]["api_key"],  # API key from Streamlit Secrets
-    http_client=http_client
-)
+# Initialize OpenAI client with Streamlit Secrets
+try:
+    client = OpenAI(
+        api_key=st.secrets["openai"]["api_key"],  # API key from Streamlit Secrets
+        http_client=http_client
+    )
+    st.success("OpenAI client initialized successfully.")
+except Exception as e:
+    st.error(f"Error initializing OpenAI client: {e}")
+    st.stop()
 
 # List of available message types
 MESSAGE_TYPES = [
@@ -49,7 +76,7 @@ MESSAGE_TYPES = [
 @st.cache_data
 def read_prompt_from_md(filename):
     """Read the prompt from a markdown file and cache the result."""
-    with open(f"{filename}.md", "r") as file:
+    with open(f"{filename}.md", "r", encoding="utf-8") as file:
         return file.read()
 
 def process_image(_image):
@@ -80,7 +107,6 @@ def process_image(_image):
 def replace_german_sharp_s(text):
     """Replace all occurrences of 'ß' with 'ss'."""
     return text.replace('ß', 'ss')
-
 
 def clean_json_string(s):
     s = s.strip()
@@ -179,11 +205,10 @@ def transform_output(json_string):
         st.code(json_string)
         return "Error: Unable to process input"
 
-
-def get_chatgpt_response(prompt, image=None, selected_language="English"):
+def get_chatgpt_response(prompt, model, image=None, selected_language="English"):
     """Fetch response from OpenAI GPT with error handling."""
     try:
-        # Step 2: Create a system prompt that includes language instruction
+        # Create a system prompt that includes language instruction
         system_prompt = (
             """
             You are an expert educator specializing in generating test questions and answers across all topics, following Bloom’s Taxonomy. Your role is to create high-quality Q&A sets based on the material provided by the user, ensuring each question aligns with a specific level of Bloom’s Taxonomy: Remember, Understand, Apply, Analyze, Evaluate, and Create.
@@ -191,18 +216,14 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
             The user will provide input by either uploading a text or an image. Your tasks are as follows:
 
             Input Analysis:
-            carefully analyze the content to understand the key concepts and important information.
-            For Images: Strictly adhere to MAIN INSTRUCTIONS
-            
+            - Carefully analyze the content to understand the key concepts and important information.
+            - For Images: Analyze diagrams, charts, or infographics to derive educational content.
+
             Question Generation by Bloom Level:
             Based on the analyzed material (from text or image), generate questions across all six levels of Bloom’s Taxonomy:
-
-            Remember: Simple recall-based questions.
-            Understand: Questions that assess comprehension of the material.
-            Apply: Questions requiring the use of knowledge in practical situations.
-            Analyze: Questions that involve breaking down the material and examining relationships.
-            Evaluate: Critical thinking questions requiring judgments or assessments.
-            Create: Open-ended tasks that prompt the student to design or construct something based on the information provided.
+            - Remember: Simple recall-based questions.
+            - Understand: Questions that assess comprehension of the material.
+            - Apply: Questions requiring the use of knowledge in practical situations.
             """
         )
         
@@ -231,21 +252,19 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
             ]
 
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model=model,
             messages=messages,
             max_tokens=16000,
             temperature=0.6
         )
         
-        # Return the content of the first choice
         return response.choices[0].message.content
     except Exception as e:
-        # Log and show error
         st.error(f"Error communicating with OpenAI API: {e}")
         logging.error(f"Error communicating with OpenAI API: {e}")
         return None
 
-def process_images(images, selected_language):
+def process_images(images, selected_language, selected_model):
     """Process uploaded images and generate questions."""
     for idx, image in enumerate(images):
         st.image(image, caption=f'Page {idx+1}', use_column_width=True)
@@ -256,23 +275,21 @@ def process_images(images, selected_language):
         selected_types = st.multiselect(f"Select question types for Page {idx+1}:", MESSAGE_TYPES, key=f"selected_types_{idx}")
 
         # Button to generate questions for the page
-        if st.button(f"Generate Questions for Page {idx}", key=f"generate_button_{idx}"):
-            # Only generate questions if there is user input and selected question types
+        if st.button(f"Generate Questions for Page {idx+1}", key=f"generate_button_{idx}"):
             if user_input and selected_types:
-                # Pass the selected_language here
-                generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language)
+                generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language, selected_model)
             else:
                 st.warning(f"Please enter text and select question types for Page {idx+1}.")
 
-def generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language):
+def generate_questions_with_image(user_input, learning_goals, selected_types, image, selected_language, selected_model):
     """Generate questions for the image and handle errors."""
     all_responses = ""
     generated_content = {}
     for msg_type in selected_types:
         prompt_template = read_prompt_from_md(msg_type)
-        full_prompt = f"MAIN INSTRUCTIONS:\n{prompt_template}\n\nUser Input: {user_input}\n\nLearning Goals: {learning_goals}"
+        full_prompt = f"{prompt_template}\n\nUser Input: {user_input}\n\nLearning Goals: {learning_goals}"
         try:
-            response = get_chatgpt_response(full_prompt, image=image, selected_language=selected_language)
+            response = get_chatgpt_response(full_prompt, model=selected_model, image=image, selected_language=selected_language)
             if response:
                 if msg_type == "inline_fib":
                     processed_response = transform_output(response)
@@ -327,13 +344,16 @@ def extract_text_from_docx(file):
     text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
     return text.strip()
 
+def is_pdf_ocr(text):
+    """Check if PDF contains OCR text."""
+    return bool(text)
+
 def process_pdf(file):
     text_content = extract_text_from_pdf(file)
     
-    # If no text is found, assume it's a non-OCR PDF
     if not text_content or not is_pdf_ocr(text_content):
         st.warning("This PDF is not OCRed. Text extraction failed. Please upload an OCRed PDF.")
-        return None, convert_pdf_to_images(file)  # Fallback to image processing
+        return None, convert_pdf_to_images(file)
     else:
         return text_content, None
 
@@ -341,98 +361,22 @@ def main():
     """Main function for the Streamlit app."""
     st.title("OLAT Fragen Generator")
 
-    # Step 1: Language selection using radio buttons
-    st.subheader("Einstellungen")
-    
-    # Two-column layout
-    col1, col2 = st.columns([1, 2])  # Adjust column widths if necessary
-    
-    # Left Column: Language selection
-    with col1:
-        st.markdown("### Sprache auswählen:")
-        languages = {
-            "German": "German",
-            "English": "English",
-            "French": "French",
-            "Italian": "Italian",
-            "Spanish": "Spanish"
-        }
-        selected_language = st.radio("Wählen Sie die Sprache für den Output:", list(languages.values()), index=0)
-    
-    # Right Column: Dropdowns
-    with col2:
-        # Other expandable sections below
-        with st.expander("ℹ️ Kosteninformationen"):
-            st.markdown('''
-            <div class="custom-info">
-                <ul>
-                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
-                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-        
-        with st.expander("✅ Fragetypen"):
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Multiple-Choice-Fragen:</strong>
-                <ul>
-                    <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
-                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten = 3 Punkte</li>
-                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten = 3 Punkte</li>
-                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten = 3 Punkte</li>
-                </ul>
-                <p>Man kann die Punktzahl der Fragen im Editor später mit Ctrl+H suchen und ersetzen. Achtung: Punktzahl für korrekte Antworten UND maximale Punktzahl anpassen!</p>
-            </div>
-            ''', unsafe_allow_html=True)
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Inline/FIB-Fragen:</strong>
-                <ul>
-                    <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
-                    <li>FiB = Das fehlende Wort eingeben.</li>
-                    <li>Inline = Das fehlende Wort auswählen.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-            st.markdown('''
-            <div class="custom-success">
-                <strong>Andere Fragetypen:</strong>
-                <ul>
-                    <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
-                    <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
-                    <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
-                    <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
-    
-        with st.expander("⚠️ Warnungen"):
-            st.markdown('''
-            <div class="custom-warning">
-                <ul>
-                    <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
-                    <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
-                </ul>
-            </div>
-            ''', unsafe_allow_html=True)
+    # Model selection
+    st.subheader("Select Model for Generation:")
+    model_options = ["gpt-4o", "gpt-4-turbo"]
+    selected_model = st.selectbox("Choose the model:", model_options, index=0)
 
-        # Kontaktinformationen Expander
-        with st.expander("📧 Kontaktinformationen"):
-            st.markdown('''
-            <div class="custom-info">
-                <p>Wenn du Fragen oder Verbesserungsideen hast, kannst du mich gerne kontaktieren:</p>
-                <ul>
-                    <li><strong>Pietro Rossi</strong></li>
-                    <li><strong>E-Mail:</strong> pietro.rossi[at]bbw.ch</li>
-                </ul>
-                <p>Ich freue mich über dein Feedback!</p>
-            </div>
-            ''', unsafe_allow_html=True)
+    # Language selection
+    st.subheader("Select Language for Generated Questions:")
+    languages = {
+        "German": "German",
+        "English": "English",
+        "French": "French",
+        "Italian": "Italian",
+        "Spanish": "Spanish"
+    }
+    selected_language = st.radio("Select output language:", list(languages.keys()), index=0)
 
-
-
-    
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
 
@@ -440,22 +384,19 @@ def main():
     image_content = None
     images = []
 
-    
-    # Reset cache when a new file is uploaded
     if uploaded_file:
-        st.cache_data.clear()  # This clears the cache to avoid previous cached values
+        st.cache_data.clear()
 
     if uploaded_file is not None:
         if uploaded_file.type == "application/pdf":
-            text_content = extract_text_from_pdf(uploaded_file)
+            text_content, images = process_pdf(uploaded_file)
             if text_content:
-                st.success("Text aus PDF extrahiert. Sie können es nun im folgenden Textfeld bearbeiten. PDFs, die länger als 5 Seiten sind, sollten gekürzt werden.")
-            else:
-                images = convert_pdf_to_images(uploaded_file)
+                st.success("Text extracted from PDF. You can now edit it below.")
+            elif images:
                 st.success("PDF converted to images. You can now ask questions about each page.")
         elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             text_content = extract_text_from_docx(uploaded_file)
-            st.success("Text extracted successfully. You can now edit it in the text area below.")
+            st.success("Text extracted successfully. You can now edit it below.")
         elif uploaded_file.type.startswith('image/'):
             image_content = Image.open(uploaded_file)
             st.image(image_content, caption='Uploaded Image', use_column_width=True)
@@ -463,17 +404,14 @@ def main():
         else:
             st.error("Unsupported file type. Please upload a PDF, DOCX, or image file.")
 
-    # Process images if any, otherwise process text or image content
     if images:
-        process_images(images, selected_language)  # Pass the selected_language here
+        process_images(images, selected_language, selected_model)
     else:
         user_input = st.text_area("Enter your text or question about the image:", value=text_content)
         learning_goals = st.text_area("Learning Goals (Optional):")
-        
-        # Select question types to generate
         selected_types = st.multiselect("Select question types to generate:", MESSAGE_TYPES)
-        
-        # Custom CSS for light blue background in info callouts
+
+        # Custom CSS for styling
         st.markdown(
             """
             <style>
@@ -498,24 +436,14 @@ def main():
             </style>
             """, unsafe_allow_html=True
         )
-        
-        # Generate questions button
+
         if st.button("Generate Questions"):
             if (user_input or image_content) and selected_types:
-                # Ensure that the selected_language is passed to the function
-                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language)              
+                generate_questions_with_image(user_input, learning_goals, selected_types, image_content, selected_language, selected_model)              
             elif not user_input and not image_content:
                 st.warning("Please enter some text, upload a file, or upload an image.")
             elif not selected_types:
                 st.warning("Please select at least one question type.")
-
-
-@st.cache_data
-def is_pdf_ocr(text):
-    """Placeholder function to determine if PDF is OCRed."""
-    # Implement actual OCR detection logic if necessary
-    # For now, return True to assume PDFs are OCRed
-    return True
 
 if __name__ == "__main__":
     main()
