@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from openai import OpenAI
 import json
 import random
@@ -361,21 +362,103 @@ def main():
     """Main function for the Streamlit app."""
     st.title("OLAT Fragen Generator")
 
-    # Model selection
-    st.subheader("Select Model for Generation:")
-    model_options = ["gpt-4o", "gpt-4o-mini"]
-    selected_model = st.selectbox("Choose the model:", model_options, index=0)
+    # Two-column layout
+    col1, col2 = st.columns([1, 2])
 
-    # Language selection
-    st.subheader("Select Language for Generated Questions:")
-    languages = {
-        "German": "German",
-        "English": "English",
-        "French": "French",
-        "Italian": "Italian",
-        "Spanish": "Spanish"
-    }
-    selected_language = st.radio("Select output language:", list(languages.keys()), index=0)
+    # Left Column: Language selection
+    with col1:
+        st.markdown("### Sprache auswählen:")
+        languages = {
+            "German": "German",
+            "English": "English",
+            "French": "French",
+            "Italian": "Italian",
+            "Spanish": "Spanish"
+        }
+        selected_language = st.radio("Wählen Sie die Sprache für den Output:", list(languages.values()), index=0)
+
+    # Right Column: Video tutorial and expandable sections
+    with col2:
+        # Videoanleitung Section
+        st.markdown("### Videoanleitung")
+        components.html(
+            """
+            <!-- Insert your YouTube iframe here -->
+            <iframe width="100%" height="180" src="https://www.youtube.com/embed/EXAMPLE_VIDEO_ID" 
+            title="Demo-Video" frameborder="0" allow="accelerometer; autoplay; 
+            clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+            """,
+            height=200
+        )
+
+        # Expanders for additional information
+        with st.expander("ℹ️ Kosteninformationen"):
+            st.markdown('''
+            <div class="custom-info">
+                <ul>
+                    <li>Die Nutzungskosten hängen von der <strong>Länge der Eingabe</strong> ab (zwischen $0,01 und $0,1).</li>
+                    <li>Jeder ausgewählte Fragetyp kostet ungefähr $0,01.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+        
+        with st.expander("✅ Fragetypen"):
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Multiple-Choice-Fragen:</strong>
+                <ul>
+                    <li>Alle Multiple-Choice-Fragen haben maximal <strong>3 Punkte</strong>.</li>
+                    <li><strong>multiple_choice1</strong>: 1 von 4 richtigen Antworten = 3 Punkte</li>
+                    <li><strong>multiple_choice2</strong>: 2 von 4 richtigen Antworten = 3 Punkte</li>
+                    <li><strong>multiple_choice3</strong>: 3 von 4 richtigen Antworten = 3 Punkte</li>
+                </ul>
+                <p>Man kann die Punktzahl der Fragen im Editor später mit Ctrl+H suchen und ersetzen. Achtung: Punktzahl für korrekte Antworten UND maximale Punktzahl anpassen!</p>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Inline/FIB-Fragen:</strong>
+                <ul>
+                    <li>Die <strong>Inline</strong>- und <strong>FiB</strong>-Fragen sind inhaltlich identisch.</li>
+                    <li>FiB = Das fehlende Wort eingeben.</li>
+                    <li>Inline = Das fehlende Wort auswählen.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+            st.markdown('''
+            <div class="custom-success">
+                <strong>Andere Fragetypen:</strong>
+                <ul>
+                    <li><strong>Einzelauswahl</strong>: 4 Antworten, 1 Punkt pro Frage.</li>
+                    <li><strong>KPRIM</strong>: 4 Antworten, 5 Punkte (4/4 korrekt), 2,5 Punkte (3/4 korrekt), 0 Punkte (50 % oder weniger korrekt).</li>
+                    <li><strong>Wahr/Falsch</strong>: 3 Antworten, 3 Punkte pro Frage.</li>
+                    <li><strong>Drag & Drop</strong>: Variable Punkte.</li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+        
+        with st.expander("⚠️ Warnungen"):
+            st.markdown('''
+            <div class="custom-warning">
+                <ul>
+                    <li><strong>Überprüfen Sie immer, ob die Gesamtpunktzahl = Summe der Punkte der richtigen Antworten ist.</strong></li>
+                    <li><strong>Überprüfen Sie immer den Inhalt der Antworten.</strong></li>
+                </ul>
+            </div>
+            ''', unsafe_allow_html=True)
+
+        with st.expander("📧 Kontaktinformationen"):
+            st.markdown('''
+            <div class="custom-info">
+                <p>Wenn du Fragen oder Verbesserungsideen hast, kannst du mich gerne kontaktieren:</p>
+                <ul>
+                    <li><strong>Pietro Rossi</strong></li>
+                    <li><strong>E-Mail:</strong> pietro.rossi[at]bbw.ch</li>
+                </ul>
+                <p>Ich freue mich über dein Feedback!</p>
+            </div>
+            ''', unsafe_allow_html=True)
 
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
