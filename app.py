@@ -358,6 +358,8 @@ def process_pdf(file):
     else:
         return text_content, None
 
+import streamlit.components.v1 as components
+
 def main():
     """Main function for the Streamlit app."""
     st.title("OLAT Fragen Generator")
@@ -365,34 +367,8 @@ def main():
     # Two-column layout
     col1, col2 = st.columns([1, 2])
 
-    # Left Column: Language selection
     with col1:
-        st.markdown("### Sprache auswählen:")
-        languages = {
-            "German": "German",
-            "English": "English",
-            "French": "French",
-            "Italian": "Italian",
-            "Spanish": "Spanish"
-        }
-        selected_language = st.radio("Wählen Sie die Sprache für den Output:", list(languages.values()), index=0)
-
-    # Right Column: Video tutorial and expandable sections
-    with col2:
-        # Videoanleitung Section
-        st.markdown("### Videoanleitung")
-        components.html(
-            """
-            <!-- Insert your YouTube iframe here -->
-            <iframe width="100%" height="180" src="https://www.youtube.com/embed/EXAMPLE_VIDEO_ID" 
-            title="Demo-Video" frameborder="0" allow="accelerometer; autoplay; 
-            clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-            </iframe>
-            """,
-            height=200
-        )
-
-        # Expanders for additional information
+        # Expanders above language selection
         with st.expander("ℹ️ Kosteninformationen"):
             st.markdown('''
             <div class="custom-info">
@@ -459,6 +435,36 @@ def main():
                 <p>Ich freue mich über dein Feedback!</p>
             </div>
             ''', unsafe_allow_html=True)
+
+        # Language selection below expanders
+        st.markdown("### Sprache auswählen:")
+        languages = {
+            "German": "German",
+            "English": "English",
+            "French": "French",
+            "Italian": "Italian",
+            "Spanish": "Spanish"
+        }
+        selected_language = st.radio(
+            "Wählen Sie die Sprache für den Output:",
+            list(languages.values()),
+            index=0
+        )
+
+    with col2:
+        # Video iframe filling the entire right column
+        st.markdown("### Videoanleitung")
+        components.html(
+            """
+            <!-- Insert your YouTube iframe here -->
+            <iframe width="100%" height="600" src="https://www.youtube.com/embed/DEIN_VIDEO_ID" 
+            title="Demo-Video" frameborder="0" allow="accelerometer; autoplay; 
+            clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+            """,
+            height=620  # Adjust height as needed
+        )
+
 
     # File uploader section
     uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
