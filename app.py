@@ -110,9 +110,10 @@ def replace_german_sharp_s(text):
     return text.replace('ß', 'ss')
 
 def clean_json_string(s):
+    # Remove all surrounding markdown code block indicators
+    s = re.sub(r'^\s*```(json)?\s*', '', s, flags=re.IGNORECASE)  # Remove opening ```
+    s = re.sub(r'\s*```\s*$', '', s, flags=re.IGNORECASE)         # Remove closing ```
     s = s.strip()
-    s = re.sub(r'^```json\s*', '', s)
-    s = re.sub(r'\s*```$', '', s)
     s = re.sub(r'\s+', ' ', s)
     s = re.sub(r'(?<=text": ")(.+?)(?=")', lambda m: m.group(1).replace('\n', '\\n'), s)
     s = ''.join(char for char in s if ord(char) >= 32 or char == '\n')
