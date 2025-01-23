@@ -363,7 +363,7 @@ def main():
 
     # Model selection
     st.subheader("Select Model for Generation:")
-    model_options = ["gpt-4o", "gpt-4-turbo"]
+    model_options = ["gpt-4o", "gpt-4o-mini"]
     selected_model = st.selectbox("Choose the model:", model_options, index=0)
 
     # Language selection
