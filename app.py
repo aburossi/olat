@@ -469,7 +469,7 @@ def main():
         st.markdown("### Videoanleitung")
         components.html(
             """
-            <iframe src="https://bbwch-my.sharepoint.com/personal/pietro_rossi_bbw_ch/_layouts/15/embed.aspx?UniqueId=2536d633-4608-4236-a19f-70595426359f&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Atrue%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="640" height="360" frameborder="0" scrolling="no" allowfullscreen title="OLAT Fragengenerator.mp4"></iframe>
+            <iframe src="https://bbwch-my.sharepoint.com/:v:/g/personal/pietro_rossi_bbw_ch/ETPWNiUIRjZCoZ9wWVQmNZ8BwVVidjV267j5wFs-3fW3_g?e=7eVwjT" style="border:0px #ffffff none;" name="myiFrame" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="400px" width="600px" allowfullscreen></iframe>
             """,
             height=370
         )
