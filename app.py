@@ -222,7 +222,7 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
     """Fetch response from OpenAI GPT with error handling."""
     try:
         # Auto-select model based on input type
-        model = "gpt-4o-mini" if image else "gpt-4o"
+        model = "gpt-4o" if image else "gpt-4o"
         
         # Create a system prompt that includes language instruction
         system_prompt = (
