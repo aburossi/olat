@@ -270,7 +270,7 @@ def get_chatgpt_response(prompt, image=None, selected_language="English"):
         response = client.chat.completions.create(
             model=model,
             messages=messages,
-            max_tokens=16000,
+            max_completion_tokens=16000,
             temperature=0.6
         )
         

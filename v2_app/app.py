@@ -324,7 +324,7 @@ def call_model(
         model=MODEL_NAME,
         messages=messages,
         temperature=0.4,
-        max_tokens=8000,
+        max_completion_tokens=8000,
     )
     return (response.choices[0].message.content or "").strip()
 
