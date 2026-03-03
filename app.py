@@ -475,31 +475,50 @@ def main():
         )
 
     # File uploader section
-    uploaded_file = st.file_uploader("Upload a PDF, DOCX, or image file", type=["pdf", "docx", "jpg", "jpeg", "png"])
+    uploaded_files = st.file_uploader(
+        "Upload a PDF, DOCX, or image file(s) (max 6 images)",
+        type=["pdf", "docx", "jpg", "jpeg", "png"],
+        accept_multiple_files=True
+    )
 
     text_content = ""
     image_content = None
     images = []
 
-    if uploaded_file:
+    if uploaded_files:
         st.cache_data.clear()
 
-    if uploaded_file is not None:
-        if uploaded_file.type == "application/pdf":
-            text_content, images = process_pdf(uploaded_file)
-            if text_content:
-                st.success("Text extracted from PDF. You can now edit it below.")
-            elif images:
-                st.success("PDF converted to images. You can now ask questions about each page.")
-        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-            text_content = extract_text_from_docx(uploaded_file)
-            st.success("Text extracted successfully. You can now edit it below.")
-        elif uploaded_file.type.startswith('image/'):
-            image_content = Image.open(uploaded_file)
-            st.image(image_content, caption='Uploaded Image', use_column_width=True)
-            st.success("Image uploaded successfully. You can now ask questions about the image.")
+    if uploaded_files:
+        if len(uploaded_files) == 1:
+            uploaded_file = uploaded_files[0]
+            if uploaded_file.type == "application/pdf":
+                text_content, images = process_pdf(uploaded_file)
+                if text_content:
+                    st.success("Text extracted from PDF. You can now edit it below.")
+                elif images:
+                    st.success("PDF converted to images. You can now ask questions about each page.")
+            elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                text_content = extract_text_from_docx(uploaded_file)
+                st.success("Text extracted successfully. You can now edit it below.")
+            elif uploaded_file.type.startswith('image/'):
+                image_content = Image.open(uploaded_file)
+                image_content.load()
+                st.image(image_content, caption='Uploaded Image', use_column_width=True)
+                st.success("Image uploaded successfully. You can now ask questions about the image.")
+            else:
+                st.error("Unsupported file type. Please upload a PDF, DOCX, or image file.")
         else:
-            st.error("Unsupported file type. Please upload a PDF, DOCX, or image file.")
+            non_image_files = [f.name for f in uploaded_files if not f.type.startswith('image/')]
+            if non_image_files:
+                st.error("Multiple uploads are only supported for images. Please upload a single PDF/DOCX or up to 6 images.")
+            else:
+                if len(uploaded_files) > 6:
+                    st.warning("You uploaded more than 6 images. Only the first 6 images will be used.")
+                for uploaded_image in uploaded_files[:6]:
+                    image = Image.open(uploaded_image)
+                    image.load()
+                    images.append(image)
+                st.success(f"{len(images)} images uploaded successfully. You can now ask questions about each image.")
 
     if images:
         process_images(images, selected_language)
