@@ -1,4 +1,3 @@
 poppler-utils
-libgl1-mesa-glx
 ghostscript
 zlib1g-dev
